@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.ndimage import morphology as morph
+from scipy.ndimage import grey_erosion, grey_dilation
 
 def flat_structuring_element(size):
     """Return flat (binary) structuring element of length `size`."""
@@ -11,14 +11,14 @@ def linear_structuring_element(size):
 
 def morphological_opening(series, se):
     """Opening = dilation of erosion."""
-    eroded = morph.erosion(series, structure=se)
-    opened = morph.dilation(eroded, structure=se)
+    eroded = grey_erosion(series, footprint=se)
+    opened = grey_dilation(eroded, footprint=se)
     return opened
 
 def morphological_closing(series, se):
     """Closing = erosion of dilation."""
-    dilated = morph.dilation(series, structure=se)
-    closed = morph.erosion(dilated, structure=se)
+    dilated = grey_dilation(series, footprint=se)
+    closed = grey_erosion(dilated, footprint=se)
     return closed
 
 def trend_extraction(series, se_size=5, se_type='flat', operation='opening'):
